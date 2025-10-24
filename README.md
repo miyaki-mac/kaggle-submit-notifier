@@ -21,7 +21,7 @@ The tool works even with the free Slack plan, making it convenient for team subm
 
 ---
 
-## 🧰 Requirements
+## How to run
 ## 1. Create a Slack Account
 ### 1.1 Create a Workspace
 - Email address
