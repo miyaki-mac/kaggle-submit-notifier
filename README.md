@@ -1,5 +1,7 @@
 # Slack Submit Notifier
 
+<img src="./images/10_image.png" width="500">
+
 I recently started participating in Kaggle competitions, but I couldn’t find an easy way to monitor submission processing times.
 So, I built a simple monitoring tool myself.
 
@@ -16,8 +18,6 @@ The tool works even with the free Slack plan, making it convenient for team subm
 - Automatic notifications to a specified Slack channel
 - Notifications include both public and private leaderboard scores (if available)
 - Unified configuration for polling and notification intervals (in minutes)
-
-<img src="./images/10_image.png" width="300">
 
 ---
 
