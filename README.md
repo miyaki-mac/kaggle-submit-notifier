@@ -1,31 +1,77 @@
 # Slack Submit Notifier
 
-最近Kaggleを始めたのですが、提出（submit）の処理時間を確認する方法が見つからなかったため、
-自分で簡易的な監視ツールを作成しました。
+I recently started participating in Kaggle competitions, but I couldn’t find an easy way to monitor submission processing times.
+So, I built a simple monitoring tool myself.
 
-このツールは、Kaggleコンペティションへの提出状況をリアルタイムで監視し、
-進行状態（例：pending → complete、pending → error）を自動的にSlackへ通知します。
-定期的にKaggle APIから最新の提出情報を取得し、ステータスの変化を検出すると、
-整形済みのメッセージをSlackに送信します。
+This tool monitors the submission status of Kaggle competitions in real time and automatically notifies Slack of status updates (e.g., pending → complete, pending → error).
+It periodically fetches the latest submission data from the Kaggle API and sends a formatted Slack message whenever a status change is detected.
 
-Slackの無料プラン（一か月版）でも動作するため、
-チーム内での提出状況共有や、チームマージ後の進捗確認などにも手軽に活用できます。
+The tool works even with the free Slack plan, making it convenient for team submission tracking and progress monitoring after team merges.
 ---
 
-# 機能
-- 指定したKaggleコンペティションの提出状況をリアルタイムで監視
-- 提出ステータスの変化（例：pending → complete、pending → error）を自動検出
-- 指定したSlackチャンネルへ結果を自動通知
-- 通知内容には、公開／非公開リーダーボードスコアも含む
-- ポーリング間隔と通知間隔を分単位の設定で統一管理
+# Features
+
+- Real-time monitoring of Kaggle competition submissions
+- Automatic detection of submission status changes (e.g., pending → complete, pending → error)
+- Automatic notifications to a specified Slack channel
+- Notifications include both public and private leaderboard scores (if available)
+- Unified configuration for polling and notification intervals (in minutes)
+
+<img src="./images/10_image.png" width="300">
 
 ---
 
 ## 🧰 Requirements
+## 1. Create a Slack Account
+### 1.1 Create a Workspace
+- Email address
+- Workspace name
+- Username
+- Member invitation email addresses
 
-### 1. Kaggle APIの認証情報
+<img src="./images/00_image.png" width="300">
 
-Kaggle APIキーを正しく設定してください。
+※ You can skip this step if you already have a Slack account.
+
+## 1.2 Create a Notification Channel
+<img src="./images/06_image.png" width="300">
+
+
+## 2. Create a Slack App
+### 2.1 Search for “Slack App” and open the following link
+<img src="./images/01_image.png" width="300">
+
+### 2.2 Click “Create an App”
+<img src="./images/02_image.png" width="300">
+
+### 2.3 Select “From scratch”
+<img src="./images/03_image.png" width="300">
+
+### 2.4 Enter the required information
+- Choose any app name
+- Select the workspace created in step 1
+
+<img src="./images/04_image.png" width="300">
+
+## 2.5 Select “Incoming Webhooks”
+<img src="./images/05_image.png" width="300">
+
+## 2.6 Click “Add New Webhook”
+<img src="./images/07_image.png" width="300">
+
+## 2.7 Choose the target channel
+Select the channel created in step 1.2
+
+<img src="./images/08_image.png" width="300">
+
+## 2.8 Copy the Webhook URL
+You’ll use this value as an argument when running the code
+
+<img src="./images/09_image.png" width="300">
+
+## 3. Kaggle API Authentication
+
+Make sure your Kaggle API key is properly configured:
 
 ```bash
 mkdir -p ~/.kaggle
@@ -45,17 +91,16 @@ pip install kaggle requests
 
 ---
 
-### 3. tmuxを利用した常時実行環境の準備（おすすめ）
+### 3. 5. (Recommended) Use tmux for Persistent Execution
 
-長時間の自動監視を行う場合は、tmuxを利用すると便利です。
-ターミナルを閉じてもスクリプトを継続実行できます。
+If you plan to run this notifier continuously, it’s convenient to use tmux so that the process keeps running even after closing the terminal.
 
 ```
 sudo apt install tmux -y
 tmux new -s kaggle-notifier
 ```
-tmuxセッションを開いた状態で次の手順（通知スクリプトの実行）を行ってください。
-セッションを維持したままバックグラウンドで動かすことができます。
+
+Run the notifier script inside the tmux session to keep it active in the background.
 
 ### 4. Run the notifier
 
